@@ -3,26 +3,24 @@
 
 #include "misc/button.h"
 #include "misc/led.h"
+#include "misc/buzzer.h"
 
 Led led(LR_PIN, LG_PIN, LB_PIN);
 Button<BUTTON_PIN> button;
+
+static Note melody[] = {
+        {650, 250},
+        {1350, 250},
+};
+
+Buzzer buzzer(BUZZER_PIN, melody, sizeof(melody) / sizeof(melody[0]));
+
 
 enum class State {
     IDLE,
     PANIC,
     SILENT
 };
-
-void waitChanges() {
-    if (digitalRead(PIR_PIN) == HIGH) {
-
-        led.changeColor(255, 0, 0);
-        tone(BUZZER_PIN, 800);
-        delay(BUZZ_TIME);
-        led.changeColor(0, 0, 0);
-        noTone(BUZZER_PIN);
-    }
-}
 
 static State state = State::IDLE;
 static unsigned long last_time = 0;
@@ -57,7 +55,6 @@ void setup() {
     Serial.begin(9600);
 
     pinMode(PIR_PIN, INPUT);
-    pinMode(BUZZER_PIN, OUTPUT);
 
 
     led.changeColor(0, 0, 0);
@@ -73,7 +70,7 @@ void changeState(State next_state) {
     if (next_state == state) return;
 
     if (state == State::PANIC) {
-        noTone(BUZZER_PIN);
+        buzzer.stop();
         led.changeColor(0, 0, 0);
     } else if (state == State::SILENT) {
         led.changeColor(0, 0, 0);
@@ -112,6 +109,7 @@ void loop() {
 
     button.handle();
     stateMachine(time);
+    buzzer.tick(time);
 
     switch (state) {
         case State::IDLE:
@@ -130,7 +128,7 @@ void loop() {
                 led.changeColor(0, 0, 255);
             }
 
-            tone(BUZZER_PIN, 800);
+            buzzer.playMelody();
             break;
 
         case State::SILENT:

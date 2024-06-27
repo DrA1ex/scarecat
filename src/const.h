@@ -1,11 +1,7 @@
-//
-// Created by dp on 27.06.2024.
-//
-
 #ifndef SCARECAT_CONST_H
 #define SCARECAT_CONST_H
 
-#define BUZZ_TIME 2000ul
+#define BUZZ_TIME 3000ul
 #define SILENT_TIME 300000ul
 
 #define IDLE_FLASH_TIME  (5000ul)
