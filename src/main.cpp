@@ -52,6 +52,9 @@ void change_state(State next_state) {
 
     if (state == State::PANIC) {
         buzzer.stop();
+    } else if (state == State::SILENT) {
+        silence_time = 0;
+        silence_level = 0;
     }
 
     if (next_state == State::PANIC) {
@@ -79,7 +82,7 @@ void button_clicked(uint8_t count) {
     if (count <= silence_level) return;
 
     silence_time = count * SILENT_TIME;
-    silence_level = count - 1;
+    silence_level = count;
 
     change_state(State::SILENT);
 }
@@ -109,9 +112,6 @@ void state_machine(unsigned long time) {
         case State::SILENT:
             if (delta >= silence_time) {
                 change_state(State::IDLE);
-
-                silence_time = 0;
-                silence_level = 0;
             }
             break;
     }
