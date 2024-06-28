@@ -1,7 +1,3 @@
-//
-// Created by dp on 27.06.2024.
-//
-
 #include "buzzer.h"
 
 Buzzer::Buzzer(uint8_t pin, Note *melody, uint16_t length) {

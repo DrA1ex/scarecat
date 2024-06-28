@@ -134,9 +134,9 @@ void loop() {
 
         case State::SILENT:
             led.changeColor(
-                    min(255, min(1, silence_level) * 128),
-                    4 + min(251, max(0, silence_level - 2) * 128),
-                    min(255, max(0, silence_level - 1) * 128));
+                    min(255, min(1, silence_level) * LED_R_STEP),
+                    min(255, LED_G_STEP + max(0, silence_level - 2) * LED_G_STEP),
+                    min(255, max(0, silence_level - 1) * LED_B_STEP));
             break;
     }
 }

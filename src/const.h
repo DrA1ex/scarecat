@@ -14,6 +14,9 @@
 #define PIR_PIN                                 (7)
 #define BUZZER_PIN                              (9)
 
+#define LED_R_STEP                              (128)
+#define LED_G_STEP                              (3)
+#define LED_B_STEP                              (64)
 
 #define BTN_SILENCE_INTERVAL                    (30u)
 #define BTN_HOLD_INTERVAL                       (1000u)
