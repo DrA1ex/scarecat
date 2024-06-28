@@ -35,7 +35,7 @@ void Buzzer::tick(unsigned long time) {
 
     auto nextCursor = _melody[(_currentNote + 1) % _melodyLength];
 
-    auto freqDiff = nextCursor.frequency - (long) cursor.frequency;
+    auto freqDiff = nextCursor.frequency - cursor.frequency;
     auto newFreq = cursor.frequency + freqDiff * (long) delta / cursor.duration;
 
     tone(_pin, newFreq);

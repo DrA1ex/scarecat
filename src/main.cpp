@@ -38,7 +38,6 @@ void setup() {
 
     pinMode(PIR_PIN, INPUT);
 
-
     led.setColor(0, 0, 0);
 
     button.begin();
@@ -74,23 +73,21 @@ void change_state(State next_state) {
     last_time = millis();
 }
 void button_clicked(uint8_t count) {
-    change_state(State::SILENT);
+    Serial.print("Clicked: ");
+    Serial.println(count);
 
     if (count <= silence_level) return;
 
     silence_time = count * SILENT_TIME;
     silence_level = count - 1;
 
-    Serial.print("Clicked: ");
-    Serial.println(count);
+    change_state(State::SILENT);
 }
 void button_hold(uint8_t) {
-    if (silence_time == 0) return;
+    if (state != State::SILENT) return;
 
     Serial.println("Reset");
-
-    silence_time = 0;
-    silence_level = 0;
+    change_state(State::IDLE);
 }
 
 void state_machine(unsigned long time) {
@@ -102,11 +99,13 @@ void state_machine(unsigned long time) {
                 change_state(State::PANIC);
             }
             break;
+
         case State::PANIC:
-            if (delta >= BUZZ_TIME) {
+            if (delta >= BUZZ_TIME && digitalRead(PIR_PIN) == LOW) {
                 change_state(State::IDLE);
             }
             break;
+
         case State::SILENT:
             if (delta >= silence_time) {
                 change_state(State::IDLE);
@@ -147,8 +146,8 @@ void loop() {
             auto level = (int) ((silence_time - delta - 1) / SILENT_TIME) + 1;
 
             if (!led.active() || led.blinkCount() != level) {
-                Serial.print("Silent mode level: ");
-                Serial.println(level);
+                Serial.print("Time left (sec): ");
+                Serial.println((silence_time - delta) / 1000);
 
                 led.blink(level, true);
             }

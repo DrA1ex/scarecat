@@ -12,10 +12,9 @@ class Buzzer {
     Note *_melody;
     uint16_t _melodyLength;
 
-    bool _playing;
-
-    unsigned long _startTime;
-    size_t _currentNote;
+    bool _playing = false;
+    unsigned long _startTime = 0;
+    size_t _currentNote = 0;
 
 public:
     explicit Buzzer(uint8_t pin, Note *melody, uint16_t length);
