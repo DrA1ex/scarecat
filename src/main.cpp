@@ -132,11 +132,14 @@ void loop() {
             buzzer.play();
             break;
 
-        case State::SILENT:
+        case State::SILENT: {
+            auto level = (int8_t) ((silence_time - (time - last_time)) / SILENT_TIME);
+
             led.changeColor(
-                    min(255, min(1, silence_level) * LED_R_STEP),
-                    min(255, LED_G_STEP + max(0, silence_level - 2) * LED_G_STEP),
-                    min(255, max(0, silence_level - 1) * LED_B_STEP));
+                    min(255, level * LED_R_STEP),
+                    min(255, LED_G_STEP + max(0, level - 4) * LED_G_STEP),
+                    min(255, max(0, level - 2) * LED_B_STEP));
+        }
             break;
     }
 }

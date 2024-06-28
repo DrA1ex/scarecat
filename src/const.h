@@ -1,7 +1,7 @@
 #pragma once
 
 #define BUZZ_TIME                               (3000ul)
-#define SILENT_TIME                             (300000ul)
+#define SILENT_TIME                             (5000ul)
 
 #define IDLE_FLASH_TIME                         (5000ul)
 #define PANIC_COLOR_TIME                        (250ul)
