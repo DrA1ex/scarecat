@@ -20,9 +20,9 @@ void Led::changeColor(Color color) {
 }
 
 void Led::changeColor(uint8_t r, uint8_t g, uint8_t b) {
-    analogWrite(this->rPin,r);
-    analogWrite(this->gPin,g);
-    analogWrite(this->bPin,b);
+    analogWrite(this->rPin, r);
+    analogWrite(this->gPin, g);
+    analogWrite(this->bPin, b);
 }
 
 

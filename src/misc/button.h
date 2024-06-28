@@ -18,37 +18,25 @@ class Button {
     static ButtonOnHoldFn _hold_handler;
 
 public:
-    static void begin();
+    void begin();
 
-    static void handle();
+    void handle();
 
-    static inline void set_on_click(ButtonOnClickFn fn) { _click_handler = fn; }
-
-    static inline void set_on_hold(ButtonOnHoldFn fn) { _hold_handler = fn; }
+    inline void set_on_click(ButtonOnClickFn fn) { _click_handler = fn; }
+    inline void set_on_hold(ButtonOnHoldFn fn) { _hold_handler = fn; }
 
 private:
     static void _handle_interrupt();
 
     static void _handle_rising_interrupt();
-
     static void _handle_falling_interrupt();
 };
 
-template<uint8_t PIN>
-volatile bool Button<PIN>::_hold = false;
-
-template<uint8_t PIN>
-volatile int Button<PIN>::_click_count = 0;
-
-template<uint8_t PIN>
-volatile unsigned long Button<PIN>::_last_impulse_time = 0;
-
-template<uint8_t PIN>
-ButtonOnClickFn Button<PIN>::_click_handler = nullptr;
-
-template<uint8_t PIN>
-ButtonOnHoldFn Button<PIN>::_hold_handler = nullptr;
-
+template<uint8_t PIN> volatile bool Button<PIN>::_hold = false;
+template<uint8_t PIN> volatile int Button<PIN>::_click_count = 0;
+template<uint8_t PIN> volatile unsigned long Button<PIN>::_last_impulse_time = 0;
+template<uint8_t PIN> ButtonOnClickFn Button<PIN>::_click_handler = nullptr;
+template<uint8_t PIN> ButtonOnHoldFn Button<PIN>::_hold_handler = nullptr;
 
 template<uint8_t PIN>
 void Button<PIN>::begin() {

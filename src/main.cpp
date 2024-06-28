@@ -1,20 +1,20 @@
-#include "Arduino.h"
+#include <Arduino.h>
+
 #include "const.h"
 
 #include "misc/button.h"
 #include "misc/led.h"
 #include "misc/buzzer.h"
 
-Led led(LR_PIN, LG_PIN, LB_PIN);
-Button<BUTTON_PIN> button;
+static Led led(LR_PIN, LG_PIN, LB_PIN);
+static Button<BUTTON_PIN> button;
 
 static Note melody[] = {
-        {650, 250},
+        {650,  250},
         {1350, 250},
 };
 
-Buzzer buzzer(BUZZER_PIN, melody, sizeof(melody) / sizeof(melody[0]));
-
+static Buzzer buzzer(BUZZER_PIN, melody, sizeof(melody) / sizeof(melody[0]));
 
 enum class State {
     IDLE,
@@ -30,26 +30,8 @@ static uint8_t silence_level = 0;
 
 void changeState(State next_state);
 
-void button_clicked(uint8_t count) {
-    changeState(State::SILENT);
-
-    if (count <= silence_level) return;
-
-    silence_time = count * SILENT_TIME;
-    silence_level = count - 1;
-
-    Serial.print("Clicked: ");
-    Serial.println(count);
-}
-
-void button_hold(uint8_t) {
-    if (silence_time == 0) return;
-
-    Serial.println("Reset");
-
-    silence_time = 0;
-    silence_level = 0;
-}
+void button_clicked(uint8_t count);
+void button_hold(uint8_t);
 
 void setup() {
     Serial.begin(9600);
@@ -78,6 +60,25 @@ void changeState(State next_state) {
 
     state = next_state;
     last_time = millis();
+}
+void button_clicked(uint8_t count) {
+    changeState(State::SILENT);
+
+    if (count <= silence_level) return;
+
+    silence_time = count * SILENT_TIME;
+    silence_level = count - 1;
+
+    Serial.print("Clicked: ");
+    Serial.println(count);
+}
+void button_hold(uint8_t) {
+    if (silence_time == 0) return;
+
+    Serial.println("Reset");
+
+    silence_time = 0;
+    silence_level = 0;
 }
 
 void stateMachine(unsigned long time) {
