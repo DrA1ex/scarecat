@@ -13,7 +13,7 @@ union Color {
 };
 
 class Led {
-    uint8_t rPin, gPin, bPin;
+    uint8_t _rPin, _gPin, _bPin;
 
 public:
     Led(uint8_t R_PIN, uint8_t G_PIN, uint8_t B_PIN);

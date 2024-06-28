@@ -4,20 +4,24 @@
 
 struct Note {
     int frequency;
-    unsigned long duration;
+    uint16_t duration;
 };
 
 class Buzzer {
-private:
-    Note *melody;
-    uint8_t pin;
-    uint16_t melodyLength;
-    bool playing;
-    unsigned long startTime;
-    uint16_t currentNote;
+    uint8_t _pin;
+    Note *_melody;
+    uint16_t _melodyLength;
+
+    bool _playing;
+
+    unsigned long _startTime;
+    size_t _currentNote;
+
 public:
     explicit Buzzer(uint8_t pin, Note *melody, uint16_t length);
-    void playMelody();
+
     void tick(unsigned long time);
+
+    void play();
     void stop();
 };
