@@ -1,31 +1,26 @@
-//
-// Created by dp on 27.06.2024.
-//
-
-#ifndef SCARECAT_BUZZER_H
-#define SCARECAT_BUZZER_H
+#pragma once
 
 #include <Arduino.h>
 
 struct Note {
     int frequency;
-    unsigned long duration;
+    uint16_t duration;
 };
 
 class Buzzer {
-private:
-    Note *melody;
-    uint8_t pin;
-    uint16_t melodyLength;
-    bool playing;
-    unsigned long startTime;
-    uint16_t currentNote;
+    uint8_t _pin;
+    Note *_melody;
+    uint16_t _melodyLength;
+
+    bool _playing = false;
+    unsigned long _startTime = 0;
+    size_t _currentNote = 0;
+
 public:
-    explicit Buzzer(uint8_t pin, Note* melody, uint16_t length);
-    void playMelody();
+    explicit Buzzer(uint8_t pin, Note *melody, uint16_t length);
+
     void tick(unsigned long time);
+
+    void play();
     void stop();
 };
-
-
-#endif //SCARECAT_BUZZER_H

@@ -1,49 +1,42 @@
-//
-// Created by dp on 27.06.2024.
-//
-
 #include "buzzer.h"
 
-Buzzer::Buzzer(uint8_t pin, Note *melody, uint16_t length) {
-    this->pin = pin;
-    this->melodyLength = length;
-    this->melody = melody;
+Buzzer::Buzzer(uint8_t pin, Note *melody, uint16_t length) : _pin(pin), _melody(melody), _melodyLength(length) {
     pinMode(pin, OUTPUT);
 }
 
-void Buzzer::playMelody() {
-    if (playing) return;
-    startTime = millis();
-    playing = true;
-    currentNote = 0;
+void Buzzer::play() {
+    if (_playing) return;
+
+    _startTime = millis();
+    _playing = true;
+    _currentNote = 0;
 }
 
 void Buzzer::stop() {
-    playing = false;
-    noTone(pin);
+    if (!_playing) return;
+
+    _playing = false;
+    noTone(_pin);
 }
 
 void Buzzer::tick(unsigned long time) {
-    if (!playing) return;
-    long delta = time - startTime;
-    auto cursor = melody[currentNote];
+    if (!_playing) return;
+
+    auto delta = time - _startTime;
+    auto cursor = _melody[_currentNote];
 
     if (delta >= cursor.duration) {
-        startTime = time - (delta - cursor.duration);
-        currentNote = (currentNote + 1) % melodyLength;
-        cursor = melody[currentNote];
+        _startTime = time - (delta - cursor.duration);
+        delta = time - _startTime;
+
+        _currentNote = (_currentNote + 1) % _melodyLength;
+        cursor = _melody[_currentNote];
     }
 
-    auto nextCursor = melody[(currentNote + 1) % melodyLength];
-    delta = time - startTime;
+    auto nextCursor = _melody[(_currentNote + 1) % _melodyLength];
 
-    auto newFreq = (long) cursor.frequency
-                   + ((long) nextCursor.frequency - (long) cursor.frequency)
-                     * (long) delta / (long) cursor.duration;
+    auto freqDiff = nextCursor.frequency - cursor.frequency;
+    auto newFreq = cursor.frequency + freqDiff * (long) delta / cursor.duration;
 
-    tone(pin, newFreq);
+    tone(_pin, newFreq);
 }
-
-
-
-
